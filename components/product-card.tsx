@@ -30,18 +30,20 @@ export const ProductCard = ({ product }: Props) => {
             {product.name}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 flex-grow flex flex-col justify-between">
+        <CardContent className="p-4 flex flex-col flex-grow">
           {product.description && (
-            <p className="text-gray-600 text-sm mb-2 transition-colors duration-300">{product.description}</p>
+            <p className="text-gray-600 text-sm mb-2 flex-grow transition-colors duration-300">{product.description}</p>
           )}
-          {price && price.unit_amount && (
-            <p className="text-lg font-semibold text-gray-900 transition-colors duration-300">
-              ${(price.unit_amount / 100).toFixed(2)}
-            </p>
-          )}
-          <Button className="mt-4 bg-black text-white hover:bg-orange-600 group-hover:bg-orange-500 transition-colors duration-300 cursor-pointer">
-            View Details
-          </Button>
+          <div className="mt-auto">
+            {price && price.unit_amount && (
+              <p className="text-lg font-semibold text-gray-900 transition-colors duration-300">
+                ${(price.unit_amount / 100).toFixed(2)}
+              </p>
+            )}
+            <Button className="mt-4 bg-black text-white hover:bg-orange-600 group-hover:bg-orange-500 transition-colors duration-300 cursor-pointer w-full">
+              View Details
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </Link>
