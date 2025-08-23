@@ -25,7 +25,7 @@ export default function CheckoutPage() {
       <h1 className="text-3xl font-bold mb-8 text-center">Checkout</h1>
       <Card className="max-w-md mx-auto mb-8">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">Order Summary</CardTitle>
+          <CardTitle className="text-xl font-bold">Order <span className="text-orange-500">Summary</span></CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-4">
@@ -42,6 +42,7 @@ export default function CheckoutPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => removeItem(item.id)}
+                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors duration-300"
                   >
                     –
                   </Button>
@@ -50,6 +51,7 @@ export default function CheckoutPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => addItem({ ...item, quantity: 1 })}
+                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors duration-300"
                   >
                     +
                   </Button>
@@ -64,7 +66,7 @@ export default function CheckoutPage() {
       </Card>
       <form action={checkoutAction} className="max-w-md mx-auto">
         <input type="hidden" name="items" value={JSON.stringify(items)} />
-        <Button type="submit" variant="default" className="w-full">
+        <Button type="submit" variant="default" className="w-full hover:bg-orange-500 transition-colors duration-300 cursor-pointer">
           Proceed to Payment
         </Button>
       </form>
