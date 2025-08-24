@@ -67,20 +67,20 @@ npm start
 
 ## Demo
 
-![alt text](public/demo/page0.png)
+<img src="public/demo/page0.png" alt="Demo" width="400" style="display:block; margin:auto;"/>
 
 #### Home Page
 
-![alt text](public/demo/page1.png)
+<img src="public/demo/page1.png" alt="Home Page" width="400" style="display:block; margin:auto;"/>
 
 #### Products Page
 
-![alt text](public/demo/page2.png)
+<img src="public/demo/page2.png" alt="Products Page" width="400" style="display:block; margin:auto;"/>
 
 #### Product Details Page
 
-![alt text](public/demo/page3.png)
+<img src="public/demo/page3.png" alt="Product Details Page" width="400" style="display:block; margin:auto;"/>
 
 #### Checkout Page
 
-![alt text](public/demo/page4.png)
+<img src="public/demo/page4.png" alt="Checkout Page" width="400" style="display:block; margin:auto;"/>
