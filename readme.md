@@ -58,3 +58,13 @@ yarn dev
 npm run build
 npm start
 ```
+
+## Demo
+#### Home Page
+![alt text](public/demo/page1.png)
+#### Products Page
+![alt text](public/demo/page2.png)
+#### Product Details Page
+![alt text](public/demo/page3.png)
+#### Checkout Page
+![alt text](public/demo/page4.png)
