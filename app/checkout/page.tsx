@@ -1,16 +1,54 @@
+// app/checkout/page.tsx
 "use client";
 
+import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCartStore } from "@/store/cart-store";
-import { checkoutAction } from "./checkout-action";
 
-export default function CheckoutPage() {
+import { createPaymentIntent } from "./checkout-action"; // we'll update this
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+function CheckoutForm() {
   const { items, removeItem, addItem } = useCartStore();
-  const total = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!stripe || !elements) return;
+
+    try {
+      // 1️⃣ Create PaymentIntent on server
+      const res = await createPaymentIntent(items);
+      const clientSecret = res.client_secret;
+
+      // 2️⃣ Confirm Card Payment
+      const cardElement = elements.getElement(CardElement)!;
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: cardElement },
+      });
+
+      if (stripeError) {
+        setError(stripeError.message || "Payment failed");
+        setLoading(false);
+      } else if (paymentIntent?.status === "succeeded") {
+        window.location.href = "/success";
+      }
+    } catch (err) {
+      setError("Payment failed. Try again.");
+      setLoading(false);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -23,9 +61,12 @@ export default function CheckoutPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Checkout</h1>
+
       <Card className="max-w-md mx-auto mb-8">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">Order <span className="text-orange-500">Summary</span></CardTitle>
+          <CardTitle className="text-xl font-bold">
+            Order <span className="text-orange-500">Summary</span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-4">
@@ -64,12 +105,27 @@ export default function CheckoutPage() {
           </div>
         </CardContent>
       </Card>
-      <form action={checkoutAction} className="max-w-md mx-auto">
-        <input type="hidden" name="items" value={JSON.stringify(items)} />
-        <Button type="submit" variant="default" className="w-full hover:bg-orange-500 transition-colors duration-300 cursor-pointer">
-          Proceed to Payment
+
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+        <CardElement className="p-4 border rounded-md" />
+        {error && <p className="text-red-500">{error}</p>}
+        <Button
+          type="submit"
+          variant="default"
+          className="w-full hover:bg-orange-500 transition-colors duration-300 cursor-pointer"
+          disabled={!stripe || loading}
+        >
+          {loading ? "Processing..." : "Pay Now"}
         </Button>
       </form>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
   );
 }

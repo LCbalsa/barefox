@@ -1,28 +1,17 @@
+// app/checkout/checkout-action.ts
 "use server";
 
 import { stripe } from "@/lib/stripe";
 import { CartItem } from "@/store/cart-store";
-import { redirect } from "next/navigation";
 
-export const checkoutAction = async (formData: FormData): Promise<void> => {
-  const itemsJson = formData.get("items") as string;
-  const items = JSON.parse(itemsJson);
-  const line_items = items.map((item: CartItem) => ({
-    price_data: {
-      currency: "cad",
-      product_data: { name: item.name },
-      unit_amount: item.price,
-    },
-    quantity: item.quantity,
-  }));
+export const createPaymentIntent = async (items: CartItem[]) => {
+  const amount = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items,
-    mode: "payment",
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount,
+    currency: "cad",
+    automatic_payment_methods: { enabled: true },
   });
 
-  redirect(session.url!);
+  return paymentIntent; // { client_secret, id, ... }
 };

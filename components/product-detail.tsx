@@ -1,3 +1,4 @@
+// components/product-detail.tsx
 "use client";
 
 import Stripe from "stripe";

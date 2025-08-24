@@ -10,6 +10,10 @@ export default async function Home() {
     limit: 5,
   });
 
+  // Pick a random product for the hero section
+  const randomIndex = Math.floor(Math.random() * products.data.length);
+  const heroProduct = products.data[randomIndex];
+
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -25,18 +29,25 @@ export default async function Home() {
               variant="default"
               className="inline-flex items-center justify-center rounded-full px-6 py-3 bg-black text-orange-500 hover:bg-orange-500 hover:text-white transition"
             >
-              <Link href="/products" className="inline-flex items-center justify-center rounded-full px-6 py-3">
-                Browse All Products
+              <Link
+                href={`/products/${heroProduct.id}`}
+                className="inline-flex items-center justify-center rounded-full px-6 py-3"
+              >
+                View Featured Product
               </Link>
             </Button>
           </div>
-          <Image
-            alt="Hero Image"
-            src={products.data[0].images[0]}
-            className="rounded border-4 border-black"
-            width={450}
-            height={450}
-          />
+
+          {/* Hero Image → clickable link */}
+          <Link href={`/products/${heroProduct.id}`} className="rounded border-4 border-black">
+            <Image
+              alt={heroProduct.name}
+              src={heroProduct.images[0]}
+              className="rounded border-4 border-black"
+              width={450}
+              height={450}
+            />
+          </Link>
         </div>
       </section>
 
