@@ -1,4 +1,4 @@
-# 🛒 Shiroe E-commerce
+# 🛒 ShiroeShop Ecommerce Store
 
 An e-commerce web application built with **Next.js**, **TailwindCSS**, **Shadcn/UI**, and **Stripe** for seamless online shopping and checkout experiences.
 
