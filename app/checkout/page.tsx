@@ -32,6 +32,12 @@ function CheckoutForm() {
       const res = await createPaymentIntent(items);
       const clientSecret = res.client_secret;
 
+      if (!clientSecret) {
+        setError("Payment initialization failed.");
+        setLoading(false);
+        return;
+      }
+
       // 2️⃣ Confirm Card Payment
       const cardElement = elements.getElement(CardElement)!;
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
@@ -45,7 +51,7 @@ function CheckoutForm() {
         window.location.href = "/success";
       }
     } catch (err) {
-      setError("Payment failed. Try again.");
+      setError("Payment failed. Try again. " + err);
       setLoading(false);
     }
   };
@@ -74,9 +80,7 @@ function CheckoutForm() {
               <li key={item.id} className="flex flex-col gap-2 border-b pb-2">
                 <div className="flex justify-between">
                   <span className="font-medium">{item.name}</span>
-                  <span className="font-semibold">
-                    ${((item.price * item.quantity) / 100).toFixed(2)}
-                  </span>
+                  <span className="font-semibold">${((item.price * item.quantity) / 100).toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -100,9 +104,7 @@ function CheckoutForm() {
               </li>
             ))}
           </ul>
-          <div className="mt-4 border-t pt-2 text-lg font-semibold">
-            Total: ${(total / 100).toFixed(2)}
-          </div>
+          <div className="mt-4 border-t pt-2 text-lg font-semibold">Total: ${(total / 100).toFixed(2)}</div>
         </CardContent>
       </Card>
 
