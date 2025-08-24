@@ -1,4 +1,4 @@
-# 🛒 ShiroeShop Ecommerce Store
+# 🛒 Shiroe E-commerce
 
 An e-commerce web application built with **Next.js**, **TailwindCSS**, **Shadcn/UI**, and **Stripe** for seamless online shopping and checkout experiences.
 
@@ -67,20 +67,20 @@ npm start
 
 ## Demo
 
-<img src="public/demo/page0.png" alt="Demo" width="400" style="display:block; margin:auto;"/>
+![alt text](public/demo/page0.png)
 
 #### Home Page
 
-<img src="public/demo/page1.png" alt="Home Page" width="400" style="display:block; margin:auto;"/>
+![alt text](public/demo/page1.png)
 
 #### Products Page
 
-<img src="public/demo/page2.png" alt="Products Page" width="400" style="display:block; margin:auto;"/>
+![alt text](public/demo/page2.png)
 
 #### Product Details Page
 
-<img src="public/demo/page3.png" alt="Product Details Page" width="400" style="display:block; margin:auto;"/>
+![alt text](public/demo/page3.png)
 
 #### Checkout Page
 
-<img src="public/demo/page4.png" alt="Checkout Page" width="400" style="display:block; margin:auto;"/>
+![alt text](public/demo/page4.png)
