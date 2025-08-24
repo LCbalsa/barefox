@@ -19,7 +19,7 @@ export const Footer = () => {
               className="object-contain"
             />
             <span className="text-lg font-bold text-black">
-              <span className="text-orange-500">Shiroe</span>Store
+              <span className="text-orange-500">Shiroe</span>Shop
             </span>
           </Link>
           <p className="text-sm text-gray-600">
@@ -84,7 +84,7 @@ export const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 py-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} ShiroeStore. This project is for educational/demo
+        © {new Date().getFullYear()} ShiroeShop. This project is for educational/demo
         purposes only. Not a real store.
       </div>
     </footer>

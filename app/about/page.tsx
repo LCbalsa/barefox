@@ -5,6 +5,16 @@ import Link from "next/link";
 export default function About() {
   return (
     <div className="bg-white">
+      {/* Logo Section */}
+      <div className="flex justify-center py-6 bg-white">
+        <Image
+          src="/logo.png"
+          alt="ShiroeShop Logo"
+          width={150}
+          height={150}
+        />
+      </div>
+
       {/* Hero Section */}
       <section className="rounded bg-orange-50 py-8 sm:py-12">
         <div className="mx-auto grid grid-cols-1 items-center justify-items-center gap-8 px-8 sm:px-16 md:grid-cols-2">
@@ -14,6 +24,9 @@ export default function About() {
             </h2>
             <p className="text-black/70">
               At ShiroeShop, we are passionate about bringing you high-quality products at unbeatable prices. Our mission is to make shopping effortless, fun, and reliable.
+            </p>
+            <p className="text-sm text-red-500">
+              Note: This site is for learning/demo purposes only and not for commercial use.
             </p>
             <Button
               asChild
@@ -30,13 +43,12 @@ export default function About() {
           </div>
 
           {/* Hero Image */}
-          <div className="rounded border-4 border-black overflow-hidden">
+          <div>
             <Image
               alt="About ShiroeShop"
-              src="/about-hero.jpg" // Replace with your image path
+              src="/logo-main.png" // Replace with your image path
               width={450}
               height={450}
-              className="rounded border-4 border-black"
             />
           </div>
         </div>

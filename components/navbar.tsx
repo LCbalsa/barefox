@@ -17,7 +17,7 @@ export const Navbar = () => {
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-2 hover:opacity-80">
           <Image src="/logo-main.png" alt="Logo" width={40} height={40} className="object-contain" />
-          <span className="text-lg font-bold text-black"><span className="text-orange-500">Shiroe</span>Store</span>
+          <span className="text-lg font-bold text-black"><span className="text-orange-500">Shiroe</span>Shop</span>
         </Link>
 
         {/* Desktop Nav */}

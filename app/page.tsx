@@ -24,6 +24,7 @@ export default async function Home() {
               Welcome to <span className="text-orange-500">Shiroe</span>Shop
             </h2>
             <p className="text-black/70">Discover the latest products at the best prices.</p>
+
             <Button
               asChild
               variant="default"
@@ -31,9 +32,19 @@ export default async function Home() {
             >
               <Link
                 href={`/products/${heroProduct.id}`}
-                className="inline-flex items-center justify-center rounded-full px-6 py-3"
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 m-1"
               >
                 View Featured Product
+              </Link>
+            </Button>
+
+            <Button
+              asChild
+              variant="default"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 m-1 bg-black text-orange-500 hover:bg-orange-500 hover:text-white transition"
+            >
+              <Link href="/products" className="inline-flex items-center justify-center rounded-full px-6 py-3">
+                Browse All Products
               </Link>
             </Button>
           </div>
