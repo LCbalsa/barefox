@@ -5,7 +5,12 @@ import Image from "next/image";
 import { ShoppingCartIcon, MenuIcon } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 export const Navbar = () => {
   const { items } = useCartStore();
@@ -16,8 +21,16 @@ export const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-2 hover:opacity-80">
-          <Image src="/logo-main.png" alt="Logo" width={40} height={40} className="object-contain" />
-          <span className="text-lg font-bold text-black"><span className="text-orange-500">Shiroe</span>Shop</span>
+          <Image
+            src="/logo-main.png"
+            alt="Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <span className="text-lg font-bold text-black ">
+            <span className="text-orange-500">Shiroe</span>Shop
+          </span>
         </Link>
 
         {/* Desktop Nav */}
@@ -25,7 +38,10 @@ export const Navbar = () => {
           <Link href="/" className="hover:text-orange-500 transition-colors">
             Home
           </Link>
-          <Link href="/products" className="hover:text-orange-500 transition-colors">
+          <Link
+            href="/products"
+            className="hover:text-orange-500 transition-colors"
+          >
             Products
           </Link>
           <Link
@@ -55,7 +71,11 @@ export const Navbar = () => {
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-black hover:bg-orange-100">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-black hover:bg-orange-100"
+              >
                 <MenuIcon className="h-6 w-6" />
               </Button>
             </SheetTrigger>

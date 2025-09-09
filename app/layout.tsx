@@ -15,11 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="flex flex-col min-h-screen bg-white">
+      <body className="flex flex-col min-h-screen bg-white min-w-[320px]">
         <Navbar />
 
         {/* main grows to fill remaining space */}
-        <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          {children}
+        </main>
 
         <Footer />
       </body>
