@@ -5,7 +5,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
 import { banners } from '@/public/banner/banner';
 
-const banner = () => {
+const Banner = () => {
     const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     const [emblaRef] = useEmblaCarousel({ loop:true }, [autoplay.current]);
 
@@ -23,4 +23,4 @@ const banner = () => {
   )
 }
 
-export default banner
+export default Banner
