@@ -1,0 +1,19 @@
+import Image from 'next/image'
+import React from 'react'
+import { categories } from '@/public/category/category'
+
+const CategoryCard = () => {
+  return (
+    <div className='h-50'>
+        <div className='grid grid-cols-3 gap-5 mt-5 w-full h-full'>
+            {categories.map((category) => (
+            <div className="banner__slide hover:-translate-y-1" key={category.label}>
+                <Image src={category.img} alt={category.label} fill />
+            </div>
+            ))}
+        </div>
+    </div>
+  )
+}
+
+export default CategoryCard
