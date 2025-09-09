@@ -1,26 +1,53 @@
 'use client'
 import Image from 'next/image';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
 import { banners } from '@/public/banner/banner';
 
 const Banner = () => {
-    const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
-    const [emblaRef] = useEmblaCarousel({ loop:true }, [autoplay.current]);
+  const autoplay = useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    autoplay.current,
+  ]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on('select', onSelect);
+    onSelect();
+  }, [emblaApi]);
 
   return (
-    // Used Embla for this UI
-    <div className='relative overflow-hidden px-6 py-50 w-full cursor-pointer embla' ref={emblaRef}>
-        <div className='absolute inset-0 flex'>
-          {banners.map((banners) => (
-            <div className='banner__slide' key={banners.label}>
-              <Image src={banners.img} alt={banners.label} fill />
-            </div>
-          ))}
-        </div>
-    </div>
-  )
-}
+    <div
+      className="relative overflow-hidden px-6 py-50 w-full cursor-pointer embla"
+      ref={emblaRef}
+    >
+      <div className="absolute inset-0 flex">
+        {banners.map((banner) => (
+          <div className="banner__slide" key={banner.label}>
+            <Image src={banner.img} alt={banner.label} fill />
+          </div>
+        ))}
+      </div>
 
-export default Banner
+      {/* Buttons in bottom right */}
+      <div className="absolute top-4 right-4 flex gap-2">
+        {banners.map((_, index) => (
+          <button
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              index === selectedIndex ? 'bg-white' : 'bg-gray-400/60'
+            }`}
+            onClick={() => emblaApi && emblaApi.scrollTo(index)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Banner;
