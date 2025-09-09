@@ -167,3 +167,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.banner__slide {
+  flex: 0 0 100%;
+  position: relative;
+  text-align: center;
+  background-color: #ddd;
+  padding: 20px;
+}
