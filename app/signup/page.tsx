@@ -68,7 +68,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow">
+    <div className="max-w-md mx-auto my-10 p-6 border rounded-lg shadow">
       <h1 className="text-2xl font-semibold mb-4">Create an account</h1>
       <form onSubmit={handleSignup} className="space-y-4">
         <input
@@ -129,6 +129,13 @@ export default function SignupPage() {
           {loading ? "Signing up..." : "Sign Up"}
         </button>
       </form>
+
+      <p className="text-center mt-2 text-sm">
+        Already have an account?{" "}
+        <a href="/login" className="text-blue-600 hover:underline">
+          Login
+        </a>
+      </p>
 
       {/* Display messages */}
       {error && <p className="text-red-600 mt-2">{error}</p>}
