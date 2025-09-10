@@ -1,8 +1,15 @@
+// components/navbar.tsx
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCartIcon, MenuIcon } from "lucide-react";
+import {
+  ShoppingCartIcon,
+  MenuIcon,
+  LogOutIcon,
+  LogInIcon,
+} from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,10 +18,28 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
   const { items } = useCartStore();
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const router = useRouter();
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Check session via API route
+    fetch("/api/auth/session")
+      .then((res) => res.json())
+      .then((data) => setIsAuthenticated(!!data.user))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setIsAuthenticated(false);
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -28,7 +53,7 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
-          <span className="text-lg font-bold text-black ">
+          <span className="text-lg font-bold text-black">
             <span className="text-orange-500">Shiroe</span>Shop
           </span>
         </Link>
@@ -56,9 +81,29 @@ export const Navbar = () => {
               </span>
             )}
           </Link>
+
+          {isAuthenticated ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1 text-black hover:bg-orange-100"
+              onClick={handleLogout}
+            >
+              <LogOutIcon className="h-4 w-4" />
+              Logout
+            </Button>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-1 text-black hover:text-orange-500"
+            >
+              <LogInIcon className="h-4 w-4" />
+              Login
+            </Link>
+          )}
         </nav>
 
-        {/* Mobile Menu Trigger */}
+        {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-3">
           <Link href="/checkout" className="relative" aria-label="Cart">
             <ShoppingCartIcon className="h-6 w-6 text-black" />
@@ -96,6 +141,28 @@ export const Navbar = () => {
                     Checkout
                   </Link>
                 </SheetClose>
+
+                {isAuthenticated ? (
+                  <SheetClose asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex items-center gap-1 text-black hover:bg-orange-100"
+                      onClick={handleLogout}
+                    >
+                      <LogOutIcon className="h-4 w-4" /> Logout
+                    </Button>
+                  </SheetClose>
+                ) : (
+                  <SheetClose asChild>
+                    <Link
+                      href="/login"
+                      className="flex items-center gap-1 text-black hover:text-orange-500"
+                    >
+                      <LogInIcon className="h-4 w-4" /> Login
+                    </Link>
+                  </SheetClose>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
