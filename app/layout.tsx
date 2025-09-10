@@ -4,8 +4,8 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "MyStore",
-  description: "Buy cool products",
+  title: "shiroe-ecommerce",
+  description: "Shiroe E-commerce is a modern, responsive online shopping platform built with Next.js, TailwindCSS, Shadcn/UI, and Stripe, designed to deliver a seamless and secure shopping experience. It features a dynamic product catalog, efficient shopping cart management, and smooth Stripe Checkout integration, all wrapped in a clean, customizable UI. With reusable components and a mobile-friendly design, Shiroe E-commerce ensures fast performance, accessibility, and an intuitive user experience from browsing to payment.",
 };
 
 export default function RootLayout({
