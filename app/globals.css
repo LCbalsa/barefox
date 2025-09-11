@@ -172,3 +172,7 @@
   flex: 0 0 100%;
   justify-items: center;
 }
+
+.font-michroma {
+  font-family: Michroma;
+}

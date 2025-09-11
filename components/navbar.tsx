@@ -74,8 +74,8 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
-          <p className="text-xl text-black font-bold">
-            Barefox
+          <p className="px-1 text-xl text-black font-michroma">
+            BareFox
           </p>
         </Link>
 

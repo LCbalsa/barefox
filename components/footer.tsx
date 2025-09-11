@@ -18,8 +18,8 @@ export const Footer = () => {
               height={40}
               className="object-contain"
             />
-            <p className="text-lg font-bold text-black">
-              barefox
+            <p className="px-1 text-lg text-black font-michroma">
+              BareFox
             </p>
           </Link>
           <p className="text-sm text-gray-600">
