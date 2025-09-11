@@ -18,49 +18,86 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export const Navbar = () => {
   const { items } = useCartStore();
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const router = useRouter();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      const user = data.session?.user;
-      if (user) {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
         setIsAuthenticated(true);
+        setUserName(session.user.user_metadata?.username || null);
+      } else {
+        setIsAuthenticated(false);
+        setUserName(null);
+      }
 
-        const { data: profile, error } = await supabase
-          .from("users")
-          .select("username")
-          .eq("id", user.id)
-          .single();
+      setIsLoading(false); // session check finished
+    };
 
-        if (!error && profile) {
-          setUserName(profile.username);
-        } else {
-          setIsAuthenticated(false);
-          setUserName(null);
-        }
+    checkSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserName(session.user.user_metadata?.username || null);
+      } else {
+        setIsAuthenticated(false);
+        setUserName(null);
       }
     });
+
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut(); // ensures session is cleared
+    await supabase.auth.signOut();
     setIsAuthenticated(false);
     setUserName(null);
-    router.push("/login");
     window.location.replace("/login");
   };
+
+  const CartLink = (
+    <Link href="/checkout" className="relative" aria-label="Cart">
+      <ShoppingCartIcon className="h-6 w-6 text-black" />
+      {isAuthenticated && cartCount > 0 && (
+        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+          {cartCount}
+        </span>
+      )}
+    </Link>
+  );
+
+  const AuthButton = isLoading ? null : isAuthenticated ? (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="flex items-center gap-1 text-black hover:bg-orange-100"
+      onClick={handleLogout}
+    >
+      <LogOutIcon className="h-4 w-4" /> Logout
+    </Button>
+  ) : (
+    <Link
+      href="/login"
+      className="flex items-center gap-1 text-black hover:text-orange-500"
+    >
+      <LogInIcon className="h-4 w-4" /> Login
+    </Link>
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -74,73 +111,22 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
-          <p className="px-1 text-xl text-black font-michroma">
-            BareFox
-          </p>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 font-light text-black">
-          <Link href="/" className="hover:text-orange-500 transition-colors">
             Home
           </Link>
-          <Link
-            href="/products"
-            className="hover:text-orange-500 transition-colors"
-          >
+          <Link href="/products" className="hover:text-orange-500">
             Products
           </Link>
-          <Link
-            href="/checkout"
-            className="relative hover:text-orange-500 transition-colors"
-            aria-label="Shopping Cart"
-          >
-            <ShoppingCartIcon className="h-6 w-6" />
-            {isAuthenticated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
-          {isAuthenticated ? (
-            <>
-              {userName && (
-                <span className="text-sm text-gray-700">{userName}</span>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-1 text-black hover:bg-orange-100"
-                onClick={handleLogout}
-              >
-                <LogOutIcon className="h-4 w-4" />
-                Logout
-              </Button>
-            </>
-          ) : (
-            <Link
-              href="/login"
-              className="flex items-center gap-1 text-black hover:text-orange-500"
-            >
-              <LogInIcon className="h-4 w-4" />
-              Login
-            </Link>
-          )}
+          {CartLink}
+          {AuthButton}
         </nav>
 
         {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-3">
-          <Link href="/checkout" className="relative" aria-label="Cart">
-            <ShoppingCartIcon className="h-6 w-6 text-black" />
-            {/* NEED TO UPDATE, CURRENTLY STORE DATA IN LOCALSTORAGE INSTEAD OF DB. */}
-            {isAuthenticated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
+          {CartLink}
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -153,6 +139,9 @@ export const Navbar = () => {
             </SheetTrigger>
             <SheetContent side="left" className="bg-white p-6">
               <nav className="flex flex-col space-y-4 text-lg font-medium">
+                {isAuthenticated && userName && (
+                  <span className="text-sm text-gray-700">{userName}</span>
+                )}
                 <SheetClose asChild>
                   <Link href="/" className="hover:text-orange-500">
                     Home
@@ -168,33 +157,7 @@ export const Navbar = () => {
                     Checkout
                   </Link>
                 </SheetClose>
-
-                {isAuthenticated ? (
-                  <>
-                    {userName && (
-                      <span className="text-sm text-gray-700">{userName}</span>
-                    )}
-                    <SheetClose asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="flex items-center gap-1 text-black hover:bg-orange-100"
-                        onClick={handleLogout}
-                      >
-                        <LogOutIcon className="h-4 w-4" /> Logout
-                      </Button>
-                    </SheetClose>
-                  </>
-                ) : (
-                  <SheetClose asChild>
-                    <Link
-                      href="/login"
-                      className="flex items-center gap-1 text-black hover:text-orange-500"
-                    >
-                      <LogInIcon className="h-4 w-4" /> Login
-                    </Link>
-                  </SheetClose>
-                )}
+                <SheetClose asChild>{AuthButton}</SheetClose>
               </nav>
             </SheetContent>
           </Sheet>

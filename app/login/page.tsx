@@ -33,6 +33,22 @@ export default function LoginPage() {
       return;
     }
 
+    // Optional: Ensure username is in metadata (for Navbar)
+    if (data.user) {
+      // Assume you already have a `username` in your users table
+      const { data: profile } = await supabase
+        .from("users")
+        .select("username")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profile?.username) {
+        await supabase.auth.updateUser({
+          data: { username: profile.username },
+        });
+      }
+    }
+
     // Call API route to set HTTP-only cookie
     const res = await fetch("/api/auth/callback", {
       method: "POST",
@@ -48,7 +64,7 @@ export default function LoginPage() {
 
     setSuccess("Login successful! Redirecting...");
     setTimeout(() => {
-      window.location.href = "/"; // <-- force full page reload
+      window.location.href = "/"; // force full page reload
     }, 1000);
   };
 
