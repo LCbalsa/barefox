@@ -1,24 +1,21 @@
 // middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-export function middleware(req: NextRequest) {
-  const { cookies, nextUrl } = req;
+export async function middleware(req: NextRequest) {
+  const token = req.cookies.get("sb_access_token")?.value;
+  if (!token) return NextResponse.redirect(new URL("/login", req.url));
 
-  // Get the token from cookie
-  const token = cookies.get("sb_access_token")?.value;
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  );
 
-  // If user is not logged in and tries to access /checkout, redirect to /login
-  if (!token && nextUrl.pathname.startsWith("/checkout")) {
-    const loginUrl = new URL("/login", req.url);
-    return NextResponse.redirect(loginUrl);
-  }
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) return NextResponse.redirect(new URL("/login", req.url));
 
-  // Allow access
   return NextResponse.next();
 }
 
-// Apply middleware only to /checkout (and subpaths)
-export const config = {
-  matcher: ["/checkout/:path*"],
-};
+export const config = { matcher: ["/checkout/:path*"] };
