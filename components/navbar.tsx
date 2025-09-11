@@ -20,58 +20,43 @@ import {
 } from "@/components/ui/sheet";
 import { createClient } from "@/lib/supabase/client";
 
-interface ServerUser {
-  isAuthenticated: boolean;
-  userName: string | null;
-}
-
-interface NavbarProps {
-  serverUser?: ServerUser;
-}
-
-export const Navbar = ({ serverUser }: NavbarProps) => {
+export const Navbar = () => {
   const { items } = useCartStore();
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    serverUser?.isAuthenticated ?? false
-  );
-  const [userName, setUserName] = useState<string | null>(
-    serverUser?.userName ?? null
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
-  // Optional client-side session check (if needed for reactivity)
   useEffect(() => {
-    if (!serverUser) {
-      const supabase = createClient();
+    const supabase = createClient();
 
-      supabase.auth.getSession().then(async ({ data }) => {
-        const user = data.session?.user;
-        if (user) {
-          setIsAuthenticated(true);
+    supabase.auth.getSession().then(async ({ data }) => {
+      const user = data.session?.user;
+      if (user) {
+        setIsAuthenticated(true);
 
-          const { data: profile, error } = await supabase
-            .from("users")
-            .select("username")
-            .eq("id", user.id)
-            .single();
+        const { data: profile, error } = await supabase
+          .from("users")
+          .select("username")
+          .eq("id", user.id)
+          .single();
 
-          if (!error && profile) {
-            setUserName(profile.username);
-          } else {
-            setIsAuthenticated(false);
-            setUserName(null);
-          }
+        if (!error && profile) {
+          setUserName(profile.username);
+        } else {
+          setIsAuthenticated(false);
+          setUserName(null);
         }
-      });
-    }
-  }, [serverUser]);
+      }
+    });
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut(); // ensures session is cleared
     setIsAuthenticated(false);
     setUserName(null);
+    // router.push("/login");
     window.location.replace("/login");
   };
 
@@ -87,15 +72,6 @@ export const Navbar = ({ serverUser }: NavbarProps) => {
             height={40}
             className="object-contain"
           />
-<<<<<<< Updated upstream
-          <span className="text-lg font-bold text-black">
-            <span className="text-orange-500">Shiroe</span>Shop
-          </span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6 font-medium text-black">
-=======
           <p className="text-xl text-black font-bold">Barefox</p>
         </Link>
 
@@ -103,16 +79,15 @@ export const Navbar = ({ serverUser }: NavbarProps) => {
         <nav className="hidden md:flex items-center space-x-6 font-light text-black">
           {isAuthenticated &&
             (userName ? (
-              <span className="hover:text-orange-500 transition-colors">
+              <Link href="" className="hover:text-orange-500 transition-colors">
                 {userName}
-              </span>
+              </Link>
             ) : (
-              <span className="hover:text-orange-500 transition-colors">
+              <Link href="" className="hover:text-orange-500 transition-colors">
                 User
-              </span>
+              </Link>
             ))}
 
->>>>>>> Stashed changes
           <Link href="/" className="hover:text-orange-500 transition-colors">
             Home
           </Link>
@@ -160,6 +135,7 @@ export const Navbar = ({ serverUser }: NavbarProps) => {
         <div className="md:hidden flex items-center gap-3">
           <Link href="/checkout" className="relative" aria-label="Cart">
             <ShoppingCartIcon className="h-6 w-6 text-black" />
+            {/* NEED TO UPDATE, CURRENTLY STORE DATA IN LOCALSTORAGE INSTEAD OF DB. */}
             {isAuthenticated && cartCount > 0 && (
               <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
                 {cartCount}
