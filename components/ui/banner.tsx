@@ -23,19 +23,20 @@ const Banner = () => {
 
   return (
     <div
-      className="relative overflow-hidden px-6 py-50 w-full cursor-pointer embla"
+      className="relative overflow-hidden lg:py-50 md:py-30 py-15 cursor-pointer"
       ref={emblaRef}
     >
       <div className="absolute inset-0 flex">
         {banners.map((banner) => (
-          <div className="banner__slide" key={banner.label}>
-            <Image src={banner.img} alt={banner.label} fill />
+          <div className="banner__slide w-full" key={banner.label}>
+            <Image src={banner.img} alt={banner.label} width={1300} height={400} 
+            className='object-contain' quality={100} />
           </div>
         ))}
       </div>
 
       {/* Buttons in bottom right */}
-      <div className="absolute top-4 right-4 flex gap-2">
+      <div className="absolute top-6 right-4 flex gap-2">
         {banners.map((_, index) => (
           <button
             key={index}
