@@ -5,18 +5,22 @@ import Stripe from "stripe";
 import Image from "next/image";
 import { Button } from "@/components/ui/button"; // Shadcn Button
 import { useCartStore } from "@/store/cart-store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 interface Props {
   product: Stripe.Product;
 }
 
 export const ProductDetail = ({ product }: Props) => {
+  const router = useRouter();
   const { addItem, items } = useCartStore();
   const price = product.default_price as Stripe.Price;
 
   // Local state for pending quantity before adding to cart
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const cartItem = items.find((item) => item.id === product.id);
   const cartQuantity = cartItem ? cartItem.quantity : 0;
@@ -24,7 +28,23 @@ export const ProductDetail = ({ product }: Props) => {
   const increment = () => setSelectedQuantity((q) => q + 1);
   const decrement = () => setSelectedQuantity((q) => (q > 1 ? q - 1 : 1));
 
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+  }, []);
+
   const onAddToCart = () => {
+    if (!isAuthenticated) {
+      router.push("/login"); // redirect to login
+      return; // stop execution, cart is NOT updated
+    }
+
     addItem({
       id: product.id,
       name: product.name,
@@ -48,10 +68,16 @@ export const ProductDetail = ({ product }: Props) => {
         </div>
       )}
       <div className="md:w-1/2">
-        <h1 className="text-3xl font-bold mb-4 text-orange-600">{product.name}</h1>
-        {product.description && <p className="text-gray-700 mb-4">{product.description}</p>}
+        <h1 className="text-3xl font-bold mb-4 text-orange-600">
+          {product.name}
+        </h1>
+        {product.description && (
+          <p className="text-gray-700 mb-4">{product.description}</p>
+        )}
         {price && price.unit_amount && (
-          <p className="text-lg font-semibold text-orange-500">${(price.unit_amount / 100).toFixed(2)}</p>
+          <p className="text-lg font-semibold text-orange-500">
+            ${(price.unit_amount / 100).toFixed(2)}
+          </p>
         )}
 
         {/* Quantity Selector */}
@@ -64,13 +90,19 @@ export const ProductDetail = ({ product }: Props) => {
             –
           </Button>
           <span className="text-lg font-semibold">{selectedQuantity}</span>
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white" onClick={increment}>
+          <Button
+            className="bg-orange-500 hover:bg-orange-600 text-white"
+            onClick={increment}
+          >
             +
           </Button>
         </div>
 
         {/* Add to Cart Button */}
-        <Button className="bg-orange-500 hover:bg-orange-600 text-white py-5 mt-2 text-1xl" onClick={onAddToCart}>
+        <Button
+          className="bg-orange-500 hover:bg-orange-600 text-white py-5 mt-2 text-1xl"
+          onClick={onAddToCart}
+        >
           Add to Cart {cartQuantity > 0 && `(${cartQuantity} in cart)`}
         </Button>
       </div>
