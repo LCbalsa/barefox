@@ -32,9 +32,7 @@ export const Navbar = () => {
     const supabase = createClient();
 
     const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
 
       if (session?.user) {
         setIsAuthenticated(true);
@@ -44,7 +42,7 @@ export const Navbar = () => {
         setUserName(null);
       }
 
-      setIsLoading(false); // session check finished
+      setIsLoading(false);
     };
 
     checkSession();
@@ -111,10 +109,15 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
+          <p className="text-xl text-black font-bold">Barefox</p>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 font-light text-black">
+          {isAuthenticated && userName && (
+            <span className="hover:text-orange-500">{userName}</span>
+          )}
+          <Link href="/" className="hover:text-orange-500">
             Home
           </Link>
           <Link href="/products" className="hover:text-orange-500">
