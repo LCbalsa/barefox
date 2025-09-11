@@ -53,13 +53,13 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
-          <span className="text-lg font-bold text-black">
-            <span className="text-orange-500">Shiroe</span>Shop
-          </span>
+          <p className="text-xl text-black font-bold">
+            Barefox
+          </p>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6 font-medium text-black">
+        <nav className="hidden md:flex items-center space-x-6 font-light text-black">
           <Link href="/" className="hover:text-orange-500 transition-colors">
             Home
           </Link>

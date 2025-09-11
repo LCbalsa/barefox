@@ -18,9 +18,9 @@ export const Footer = () => {
               height={40}
               className="object-contain"
             />
-            <span className="text-lg font-bold text-black">
-              <span className="text-orange-500">Shiroe</span>Shop
-            </span>
+            <p className="text-lg font-bold text-black">
+              barefox
+            </p>
           </Link>
           <p className="text-sm text-gray-600">
             This website is created for learning/demo purposes only and is{" "}
