@@ -58,7 +58,7 @@ export const Navbar = () => {
     await supabase.auth.signOut(); // ensures session is cleared
     setIsAuthenticated(false);
     setUserName(null);
-    // router.push("/login");
+    router.push("/login");
     window.location.replace("/login");
   };
 

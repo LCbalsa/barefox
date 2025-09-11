@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className="flex flex-col min-h-screen bg-white min-w-[320px]">
         <Navbar />
-
+        <div className={michroma.className}></div>
         {/* main grows to fill remaining space */}
         <main className="flex-grow container mx-auto px-4 py-8">
           {children}
