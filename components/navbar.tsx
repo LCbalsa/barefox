@@ -26,28 +26,40 @@ export const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      const user = data.session?.user;
-      if (user) {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
         setIsAuthenticated(true);
+        setUserName(session.user.user_metadata?.username || null);
+      } else {
+        setIsAuthenticated(false);
+        setUserName(null);
+      }
 
-        const { data: profile, error } = await supabase
-          .from("users")
-          .select("username")
-          .eq("id", user.id)
-          .single();
+      setIsLoading(false); // session check finished
+    };
 
-        if (!error && profile) setUserName(profile.username);
-        else {
-          setIsAuthenticated(false);
-          setUserName(null);
-        }
+    checkSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserName(session.user.user_metadata?.username || null);
+      } else {
+        setIsAuthenticated(false);
+        setUserName(null);
       }
     });
+
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
@@ -69,7 +81,7 @@ export const Navbar = () => {
     </Link>
   );
 
-  const AuthButton = isAuthenticated ? (
+  const AuthButton = isLoading ? null : isAuthenticated ? (
     <Button
       variant="ghost"
       size="sm"
@@ -105,7 +117,9 @@ export const Navbar = () => {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 font-light text-black">
           {isAuthenticated && (
-            <span className="hover:text-orange-500">{userName || "User"}</span>
+            <span className="hover:text-orange-500">
+              {userName || "Loading..."}
+            </span>
           )}
           <Link href="/" className="hover:text-orange-500">
             Home
