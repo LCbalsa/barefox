@@ -54,7 +54,8 @@ export const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    const supabase = createClient();
+    await supabase.auth.signOut(); // ensures session is cleared
     setIsAuthenticated(false);
     setUserName(null);
     router.push("/login");
