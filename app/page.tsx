@@ -21,7 +21,7 @@ export default async function Home() {
         <div className="mx-auto grid grid-cols-1 items-center justify-items-center gap-8 px-8 sm:px-16 md:grid-cols-2">
           <div className="max-w-md space-y-4">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Welcome to <span className="text-orange-500">Shiroe</span>Shop
+              Welcome to <span className="text-orange-500">Bare</span>fox
             </h2>
             <p className="text-black/70">Discover the latest products at the best prices.</p>
 

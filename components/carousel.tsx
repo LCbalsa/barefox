@@ -50,9 +50,6 @@ export const Carousel = ({ products }: Props) => {
                 ${(price.unit_amount / 100).toFixed(2)}
               </p>
             )}
-            <span className="text-sm text-blue-600 underline">
-              View details →
-            </span>
           </div>
         </CardContent>
       </Card>
