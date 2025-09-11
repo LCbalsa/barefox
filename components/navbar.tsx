@@ -94,7 +94,7 @@ export const Navbar = () => {
             aria-label="Shopping Cart"
           >
             <ShoppingCartIcon className="h-6 w-6" />
-            {cartCount > 0 && (
+            {isAuthenticated && cartCount > 0 && (
               <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
                 {cartCount}
               </span>
@@ -131,7 +131,8 @@ export const Navbar = () => {
         <div className="md:hidden flex items-center gap-3">
           <Link href="/checkout" className="relative" aria-label="Cart">
             <ShoppingCartIcon className="h-6 w-6 text-black" />
-            {cartCount > 0 && (
+            {/* NEED TO UPDATE, CURRENTLY STORE DATA IN LOCALSTORAGE INSTEAD OF DB. */}
+            {isAuthenticated && cartCount > 0 && (
               <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
                 {cartCount}
               </span>
