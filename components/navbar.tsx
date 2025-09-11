@@ -19,6 +19,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export const Navbar = () => {
   const { items } = useCartStore();
@@ -26,18 +27,36 @@ export const Navbar = () => {
   const router = useRouter();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check session via API route
-    fetch("/api/auth/session")
-      .then((res) => res.json())
-      .then((data) => setIsAuthenticated(!!data.user))
-      .catch(() => setIsAuthenticated(false));
+    const supabase = createClient();
+
+    supabase.auth.getSession().then(async ({ data }) => {
+      const user = data.session?.user;
+      if (user) {
+        setIsAuthenticated(true);
+
+        const { data: profile, error } = await supabase
+          .from("users")
+          .select("username")
+          .eq("id", user.id)
+          .single();
+
+        if (!error && profile) {
+          setUserName(profile.username);
+        } else {
+          setIsAuthenticated(false);
+          setUserName(null);
+        }
+      }
+    });
   }, []);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setIsAuthenticated(false);
+    setUserName(null);
     router.push("/login");
   };
 
@@ -83,15 +102,20 @@ export const Navbar = () => {
           </Link>
 
           {isAuthenticated ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 text-black hover:bg-orange-100"
-              onClick={handleLogout}
-            >
-              <LogOutIcon className="h-4 w-4" />
-              Logout
-            </Button>
+            <>
+              {userName && (
+                <span className="text-sm text-gray-700">{userName}</span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-1 text-black hover:bg-orange-100"
+                onClick={handleLogout}
+              >
+                <LogOutIcon className="h-4 w-4" />
+                Logout
+              </Button>
+            </>
           ) : (
             <Link
               href="/login"
@@ -143,16 +167,21 @@ export const Navbar = () => {
                 </SheetClose>
 
                 {isAuthenticated ? (
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-black hover:bg-orange-100"
-                      onClick={handleLogout}
-                    >
-                      <LogOutIcon className="h-4 w-4" /> Logout
-                    </Button>
-                  </SheetClose>
+                  <>
+                    {userName && (
+                      <span className="text-sm text-gray-700">{userName}</span>
+                    )}
+                    <SheetClose asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex items-center gap-1 text-black hover:bg-orange-100"
+                        onClick={handleLogout}
+                      >
+                        <LogOutIcon className="h-4 w-4" /> Logout
+                      </Button>
+                    </SheetClose>
+                  </>
                 ) : (
                   <SheetClose asChild>
                     <Link
