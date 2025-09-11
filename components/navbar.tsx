@@ -24,7 +24,7 @@ export const Navbar = () => {
   const { items } = useCartStore();
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,9 +41,8 @@ export const Navbar = () => {
           .eq("id", user.id)
           .single();
 
-        if (!error && profile) {
-          setUserName(profile.username);
-        } else {
+        if (!error && profile) setUserName(profile.username);
+        else {
           setIsAuthenticated(false);
           setUserName(null);
         }
@@ -53,12 +52,40 @@ export const Navbar = () => {
 
   const handleLogout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut(); // ensures session is cleared
+    await supabase.auth.signOut();
     setIsAuthenticated(false);
     setUserName(null);
-    // router.push("/login");
     window.location.replace("/login");
   };
+
+  const CartLink = (
+    <Link href="/checkout" className="relative" aria-label="Cart">
+      <ShoppingCartIcon className="h-6 w-6 text-black" />
+      {isAuthenticated && cartCount > 0 && (
+        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+          {cartCount}
+        </span>
+      )}
+    </Link>
+  );
+
+  const AuthButton = isAuthenticated ? (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="flex items-center gap-1 text-black hover:bg-orange-100"
+      onClick={handleLogout}
+    >
+      <LogOutIcon className="h-4 w-4" /> Logout
+    </Button>
+  ) : (
+    <Link
+      href="/login"
+      className="flex items-center gap-1 text-black hover:text-orange-500"
+    >
+      <LogInIcon className="h-4 w-4" /> Login
+    </Link>
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
@@ -77,72 +104,22 @@ export const Navbar = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 font-light text-black">
-          {isAuthenticated &&
-            (userName ? (
-              <Link href="" className="hover:text-orange-500 transition-colors">
-                {userName}
-              </Link>
-            ) : (
-              <Link href="" className="hover:text-orange-500 transition-colors">
-                User
-              </Link>
-            ))}
-
-          <Link href="/" className="hover:text-orange-500 transition-colors">
+          {isAuthenticated && (
+            <span className="hover:text-orange-500">{userName || "User"}</span>
+          )}
+          <Link href="/" className="hover:text-orange-500">
             Home
           </Link>
-          <Link
-            href="/products"
-            className="hover:text-orange-500 transition-colors"
-          >
+          <Link href="/products" className="hover:text-orange-500">
             Products
           </Link>
-          <Link
-            href="/checkout"
-            className="relative hover:text-orange-500 transition-colors"
-            aria-label="Shopping Cart"
-          >
-            <ShoppingCartIcon className="h-6 w-6" />
-            {isAuthenticated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
-          {isAuthenticated ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1 text-black hover:bg-orange-100"
-              onClick={handleLogout}
-            >
-              <LogOutIcon className="h-4 w-4" />
-              Logout
-            </Button>
-          ) : (
-            <Link
-              href="/login"
-              className="flex items-center gap-1 text-black hover:text-orange-500"
-            >
-              <LogInIcon className="h-4 w-4" />
-              Login
-            </Link>
-          )}
+          {CartLink}
+          {AuthButton}
         </nav>
 
         {/* Mobile Menu */}
         <div className="md:hidden flex items-center gap-3">
-          <Link href="/checkout" className="relative" aria-label="Cart">
-            <ShoppingCartIcon className="h-6 w-6 text-black" />
-            {/* NEED TO UPDATE, CURRENTLY STORE DATA IN LOCALSTORAGE INSTEAD OF DB. */}
-            {isAuthenticated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
+          {CartLink}
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -158,7 +135,6 @@ export const Navbar = () => {
                 {isAuthenticated && userName && (
                   <span className="text-sm text-gray-700">{userName}</span>
                 )}
-
                 <SheetClose asChild>
                   <Link href="/" className="hover:text-orange-500">
                     Home
@@ -174,28 +150,7 @@ export const Navbar = () => {
                     Checkout
                   </Link>
                 </SheetClose>
-
-                {isAuthenticated ? (
-                  <SheetClose asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-black hover:bg-orange-100"
-                      onClick={handleLogout}
-                    >
-                      <LogOutIcon className="h-4 w-4" /> Logout
-                    </Button>
-                  </SheetClose>
-                ) : (
-                  <SheetClose asChild>
-                    <Link
-                      href="/login"
-                      className="flex items-center gap-1 text-black hover:text-orange-500"
-                    >
-                      <LogInIcon className="h-4 w-4" /> Login
-                    </Link>
-                  </SheetClose>
-                )}
+                <SheetClose asChild>{AuthButton}</SheetClose>
               </nav>
             </SheetContent>
           </Sheet>
