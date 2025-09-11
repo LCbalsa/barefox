@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Github, Linkedin, Mail } from "lucide-react";
+import { AiFillLinkedin } from "react-icons/ai"; // React Icons
 
 export const Footer = () => {
   return (
@@ -18,9 +18,7 @@ export const Footer = () => {
               height={40}
               className="object-contain"
             />
-            <p className="px-1 text-lg text-black font-michroma">
-              BareFox
-            </p>
+            <p className="px-1 text-lg text-black font-michroma">BareFox</p>
           </Link>
           <p className="text-sm text-gray-600">
             This website is created for learning/demo purposes only and is{" "}
@@ -50,33 +48,24 @@ export const Footer = () => {
         {/* Social Links */}
         <div>
           <h3 className="text-md font-semibold text-black mb-3">Connect</h3>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-2">
             <Link
-              href="https://linkedin.com/in/brianshiroe"
+              href="https://www.linkedin.com/in/brianshiroe/"
               target="_blank"
-              aria-label="LinkedIn"
+              className="flex items-center gap-2 text-gray-600 hover:text-orange-500"
+              aria-label="Brian Shiroe LinkedIn"
             >
-              <Linkedin className="h-5 w-5 text-gray-600 hover:text-orange-500" />
+              <AiFillLinkedin className="h-5 w-5" />
+              <span>Brianshiroe</span>
             </Link>
             <Link
-              href="https://github.com/brianshiroe"
+              href="https://www.linkedin.com/in/maria-zorene/"
               target="_blank"
-              aria-label="GitHub"
+              className="flex items-center gap-2 text-gray-600 hover:text-orange-500"
+              aria-label="Maria Zorene Ramos LinkedIn"
             >
-              <Github className="h-5 w-5 text-gray-600 hover:text-orange-500" />
-            </Link>
-            <Link
-              href="mailto:brianshiroe@gmail.com"
-              aria-label="Email"
-            >
-              <Mail className="h-5 w-5 text-gray-600 hover:text-orange-500" />
-            </Link>
-            <Link
-              href="https://facebook.com/brianshiroe"
-              target="_blank"
-              aria-label="Facebook"
-            >
-              <Facebook className="h-5 w-5 text-gray-600 hover:text-orange-500" />
+              <AiFillLinkedin className="h-5 w-5" />
+              <span>Zorene Ramos</span>
             </Link>
           </div>
         </div>
@@ -84,8 +73,8 @@ export const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 py-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} ShiroeShop. This project is for educational/demo
-        purposes only. Not a real store.
+        © {new Date().getFullYear()} ShiroeShop. This project is for
+        educational/demo purposes only. Not a real store.
       </div>
     </footer>
   );
