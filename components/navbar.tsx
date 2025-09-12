@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ShoppingCartIcon,
   MenuIcon,
   LogOutIcon,
   LogInIcon,
@@ -19,6 +18,8 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { createClient } from "@/lib/supabase/client";
+import { LuHeart } from "react-icons/lu";
+import { BsCart } from "react-icons/bs"
 
 export const Navbar = () => {
   const { items } = useCartStore();
@@ -70,12 +71,15 @@ export const Navbar = () => {
 
   const CartLink = (
     <Link href="/checkout" className="relative" aria-label="Cart">
-      <ShoppingCartIcon className="h-6 w-6 text-black" />
-      {isAuthenticated && cartCount > 0 && (
-        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
-          {cartCount}
-        </span>
-      )}
+      <span className="flex items-center gap-1">
+        <BsCart className="h-4 w-4 text-black" />
+        {isAuthenticated && cartCount > 0 && (
+          <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+            {cartCount}
+          </span>
+        )}
+        Cart
+      </span>
     </Link>
   );
 
@@ -109,7 +113,11 @@ export const Navbar = () => {
             height={40}
             className="object-contain"
           />
-          <p className="text-xl text-black font-bold">Barefox</p>
+
+            <p className="px-1 text-lg text-black font-michroma">
+              BareFox
+            </p>
+            
         </Link>
 
         {/* Desktop Nav */}
@@ -123,6 +131,12 @@ export const Navbar = () => {
           <Link href="/products" className="hover:text-orange-500">
             Products
           </Link>
+          <span className="flex items-center gap-1">
+          <Link href="/products" className="hover:text-orange-500">
+            <LuHeart />
+          </Link>
+            Wishlist
+          </span>
           {CartLink}
           {AuthButton}
         </nav>

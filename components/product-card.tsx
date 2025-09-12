@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import Image from "next/image";
 import { BsHeart } from "react-icons/bs";
 import { BsHeartFill } from "react-icons/bs";
-import { useState } from "react";
-import { FiShoppingCart } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { BsCart } from "react-icons/bs";
+import { BsCartCheckFill } from "react-icons/bs";
+import { motion } from 'motion/react'
+import { BsFillCartDashFill } from "react-icons/bs";
 
 interface Props {
   product: Stripe.Product;
@@ -13,11 +16,40 @@ interface Props {
 
 export const ProductCard = ({ product }: Props) => {
   const price = product.default_price as Stripe.Price;
-  const [wishlist, setWishlist] = useState(false);
+  const [wishlistToggle, setWishlistToggle] = useState(false);
+  const [cartToggle, setCartToggle] = useState(false);
+  const [cartHover, setCartHover] = useState(false);
+  const [cartHoverLocked, setCartHoverLocked] = useState(false);
+  const [cartClicked, setCartClicked] = useState(false);
 
-  const handleWishlistToggle = () =>{
-    setWishlist(prev => !prev);
+  const handleWishlistToggle = () => {
+    setWishlistToggle(prev => !prev);
   };
+
+  const handleCartToggle = () => {
+    setCartToggle(prev => !prev);
+    setCartHoverLocked(true);
+    setCartHover(false);
+    setCartClicked(true); // Using this for the cart animation
+  }
+
+  useEffect(() => {
+    if (cartHoverLocked) {
+      const timer = setTimeout(() => {
+        setCartHoverLocked(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [cartHoverLocked]);
+
+  useEffect(() => {
+    if(cartClicked) {
+      const timer = setTimeout(() => {
+        setCartClicked(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [cartClicked]);
 
   return (
     <Link href={`/products/${product.id}`} className="block h-full">
@@ -31,10 +63,20 @@ export const ProductCard = ({ product }: Props) => {
               objectFit="contain"
               className="group-hover:opacity-90 transition-opacity duration-300"
             />
-            <div className="z-10 absolute bottom-2 right-2 bg-gray-200/60 p-2 rounded-full" onClick={handleWishlistToggle}>
-            {wishlist ? <BsHeartFill/> : <BsHeart />}
+
+            <div className="z-10 absolute bottom-2 right-2 bg-gray-300/80 p-2 rounded-full" onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleWishlistToggle();
+            }}>
+              <motion.div
+                animate={{rotateY: wishlistToggle ? 180 : 0}}
+                transition={{ duration: 0.3, ease:"easeInOut"}}>
+              {wishlistToggle ? <BsHeartFill className="text-red-800"/> : <BsHeart />}
+            </motion.div>
             </div>
           </div>
+
         )}
         <CardHeader className="p-4">
           <CardTitle className="text-md font-light text-gray-900 transition-colors duration-300 truncate w-[290px] lg:w-[200px]">
@@ -48,7 +90,35 @@ export const ProductCard = ({ product }: Props) => {
                 ${(price.unit_amount / 100).toFixed(2)}
               </p>
             )}
-            <FiShoppingCart className="w-5 h-5" />
+
+            <motion.div 
+            animate={cartClicked ? { scale: 1.4 } : {scale: 1}}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            onMouseEnter={() => {
+              if(!cartHoverLocked) setCartHover(true);
+            }} 
+
+            onMouseLeave={() => {
+              if(!cartHoverLocked) setCartHover(false);
+            }}
+           
+            onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleCartToggle();
+            }}
+            >
+              
+            {!cartToggle ? (
+              <BsCart className="h-5 w-5" />
+            ) : cartHover ? (
+              <BsFillCartDashFill className="h-5 w-5 text-red-700" />
+            ) : (
+              <BsCartCheckFill className="h-5 w-5" />
+            )}
+
+            </motion.div>
+
           </div>
         </CardContent>
       </Card>
