@@ -26,11 +26,11 @@ export const Carousel = ({ products }: Props) => {
 
   return (
     <Link href={`/products/${currentProduct.id}`} passHref>
-      <Card className="overflow-hidden rounded-2xl shadow-lg border border-gray-200 cursor-pointer hover:shadow-xl transition">
+      <Card className="overflow-hidden shadow-lg border border-gray-300 cursor-pointer hover:shadow-xl transition">
         <CardContent className="grid grid-cols-1 md:grid-cols-2 items-center p-6 gap-6">
           {/* Left column → Image */}
           {currentProduct.images && currentProduct.images[0] && (
-            <div className="relative h-64 w-full flex items-center justify-center">
+            <div className="relative h-110 w-full flex items-center justify-center">
               <Image
                 src={currentProduct.images[0]}
                 alt={currentProduct.name}
@@ -42,7 +42,7 @@ export const Carousel = ({ products }: Props) => {
 
           {/* Right column → Text */}
           <div className="flex flex-col justify-center items-start space-y-4">
-            <CardTitle className="text-3xl font-bold text-gray-800">
+            <CardTitle className="text-3xl font-light text-gray-800">
               {currentProduct.name}
             </CardTitle>
             {price && price.unit_amount && (

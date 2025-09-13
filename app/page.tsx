@@ -1,18 +1,18 @@
 // import Image from "next/image";
-// import { stripe } from "@/lib/stripe";
+import { stripe } from "@/lib/stripe";
 // import { Button } from "@/components/ui/button";
 // import Link from "next/link";
-// import { Carousel } from "@/components/carousel";
+import { Carousel } from "@/components/carousel";
 import Banner from "@/components/ui/banner";
 import CategoryCard from "@/components/ui/category";
 import Brand from "@/components/ui/brand";
 import Highlight from "@/components/ui/highlight";
 
 export default async function Home() {
-  // const products = await stripe.products.list({
-  //   expand: ["data.default_price"],
-  //   limit: 5,
-  // });
+  const products = await stripe.products.list({
+    expand: ["data.default_price"],
+    limit: 5,
+  });
 
   // Pick a random product for the hero section
   // const randomIndex = Math.floor(Math.random() * products.data.length);
@@ -23,10 +23,20 @@ export default async function Home() {
       <Banner />
       <CategoryCard />
       <Brand />
-      <h1 className="text-4xl leading-none tracking-tight text-foreground text-center mb-8 pt-10 font-light">
+      <h1 className="text-4xl leading-none tracking-tight text-foreground text-center mb-8 mt-10 font-light">
         Discover Our Shoe Collection
       </h1>
       <Highlight />
+      <h1 className="text-4xl leading-none tracking-tight text-foreground text-center mb-2 mt-20 font-light">
+        New Arrivals
+      </h1>
+      <p className="text-md leading-none text-foreground text-center mb-8 font-light">
+        Discover our latest apparel
+      </p>
+      {/* Carousel Section */}
+       <section className="bg-white mb-10">
+         <Carousel products={products.data} />
+       </section>
     </div>
     // <div className="bg-white">
     //   {/* Hero Section */}
