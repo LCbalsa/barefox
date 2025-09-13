@@ -30,7 +30,8 @@ const Banner = () => {
         {banners.map((banner) => (
           <div className="banner__slide w-full" key={banner.label}>
             <Image src={banner.img} alt={banner.label} width={1300} height={400} 
-            className='object-contain' quality={100} />
+            // className='object-contain' quality={100} />
+            className='object-contain' />
           </div>
         ))}
       </div>

@@ -31,7 +31,7 @@ const Highlight = () => {
             {/* Reveals image as initial background */}
             <motion.div initial={{ opacity:1 }} whileHover={{ opacity:0 }} transition={{ duration: 0.5 }}
             className='absolute inset-0 z-0'>
-                <Image src={assets.highlight2} alt='' objectFit='cover' priority />
+                <Image src={assets.highlight2} alt='' style={{ objectFit: 'cover' }} priority />
                 <Image src={assets.chikotaLogo} width={240} height={240} alt='' className='z-10 absolute top-0 left-4 invert' />
             </motion.div>
 

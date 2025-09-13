@@ -9,7 +9,8 @@ const CategoryCard = () => {
             {categories.map((category) => (
             <div className="banner__slide hover:-translate-y-1" key={category.label}>
                 <Image src={category.img} alt={category.label} width={500} height={500}
-                className='object-contain' quality={100} />
+                // className='object-contain' quality={100} />
+                className='object-contain' />
             </div>
             ))}
         </div>
