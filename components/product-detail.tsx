@@ -8,7 +8,6 @@ import { useCartStore } from "@/store/cart-store";
 import { useState, useEffect, SetStateAction } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { BsHeart } from "react-icons/bs";
 
 interface Props {
   product: Stripe.Product;
