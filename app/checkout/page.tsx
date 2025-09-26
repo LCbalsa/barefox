@@ -9,7 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCartStore } from "@/store/cart-store";
 import Image from "next/image";
 
-import { createPaymentIntent } from "./checkout-action"; // we'll update this
+import { createPaymentIntent } from "./checkout-action";
+import { ShippingForm } from "./ShippingForm";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -20,6 +21,7 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Shipping form states
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -138,143 +140,22 @@ function CheckoutForm() {
       </Card>
 
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          onBlur={() => setFullName(fullName.trim())}
-          className="w-full p-2 border rounded-md"
-          required
-          maxLength={50}
-          pattern="[A-Za-z\s'-]{1,50}"
-          title="Name can contain letters, spaces, hyphens, and apostrophes"
+        <ShippingForm
+          fullName={fullName}
+          setFullName={setFullName}
+          phone={phone}
+          setPhone={setPhone}
+          address={address}
+          setAddress={setAddress}
+          city={city}
+          setCity={setCity}
+          state={state}
+          setState={setState}
+          zip={zip}
+          setZip={setZip}
+          country={country}
+          setCountry={setCountry}
         />
-
-        {/* Phone Number */}
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phone}
-          onChange={(e) => {
-            // Allow digits, +, spaces, parentheses, and dashes
-            const value = e.target.value.replace(/[^\d+()\-\s]/g, "");
-            setPhone(value);
-          }}
-          className="w-full p-2 border rounded-md"
-          required
-          inputMode="tel"
-          maxLength={20} // allows longer numbers with country codes
-          title="Enter a valid phone number, including country code if needed"
-        />
-
-        {/* Address */}
-        <input
-          type="text"
-          placeholder="Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          onBlur={() => setAddress(address.trim())}
-          className="w-full p-2 border rounded-md"
-          required
-          maxLength={100}
-        />
-
-        {/* City */}
-        <input
-          type="text"
-          placeholder="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          onBlur={() => setCity(city.trim())}
-          className="w-full p-2 border rounded-md"
-          required
-          maxLength={50}
-        />
-
-        {/* State / Province */}
-        <input
-          type="text"
-          placeholder="State / Province"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          onBlur={() => setState(state.trim())}
-          className="w-full p-2 border rounded-md"
-          required
-          maxLength={20}
-          pattern="[A-Za-z\s'-]{1,20}"
-          title="State/Province can contain letters, spaces, hyphens, and apostrophes"
-        />
-
-        {/* ZIP Code */}
-        <input
-          type="text"
-          placeholder="ZIP Code"
-          value={zip}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, "").slice(0, 5);
-            setZip(value);
-          }}
-          onBlur={() => {
-            if (zip.length !== 5) alert("ZIP code should be exactly 5 digits");
-          }}
-          className="w-full p-2 border rounded-md"
-          required
-          maxLength={5}
-          inputMode="numeric"
-        />
-
-        {/* Country */}
-        <select
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 border rounded-md"
-          required
-        >
-          <option value="">Select Country</option>
-
-          {/* North America */}
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="MX">Mexico</option>
-
-          {/* Europe */}
-          <option value="GB">United Kingdom</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-          <option value="IT">Italy</option>
-          <option value="ES">Spain</option>
-
-          {/* Asia */}
-          <option value="CN">China</option>
-          <option value="JP">Japan</option>
-          <option value="IN">India</option>
-          <option value="KR">South Korea</option>
-          <option value="SG">Singapore</option>
-          <option value="TH">Thailand</option>
-          <option value="MY">Malaysia</option>
-          <option value="VN">Vietnam</option>
-
-          {/* Middle East */}
-          <option value="AE">United Arab Emirates</option>
-          <option value="SA">Saudi Arabia</option>
-          <option value="IQ">Iraq</option>
-          <option value="IR">Iran</option>
-          <option value="IL">Israel</option>
-          <option value="JO">Jordan</option>
-          <option value="KW">Kuwait</option>
-          <option value="OM">Oman</option>
-          <option value="QA">Qatar</option>
-
-          {/* Oceania */}
-          <option value="AU">Australia</option>
-          <option value="NZ">New Zealand</option>
-
-          {/* Africa */}
-          <option value="ZA">South Africa</option>
-          <option value="EG">Egypt</option>
-          <option value="NG">Nigeria</option>
-        </select>
 
         <CardElement className="p-4 border rounded-md" />
         {error && <p className="text-red-500">{error}</p>}
