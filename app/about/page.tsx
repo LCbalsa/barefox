@@ -7,7 +7,7 @@ export default function About() {
     <div className="bg-white">
       {/* Logo Section */}
       <div className="flex justify-center py-6 bg-white">
-        <Image src="/logo.png" alt="ShiroeShop Logo" width={150} height={150} />
+        <Image src="/logo.png" alt="BareFox Logo" width={150} height={150} />
       </div>
 
       {/* Hero Section */}
@@ -15,10 +15,10 @@ export default function About() {
         <div className="mx-auto grid grid-cols-1 items-center justify-items-center gap-8 px-8 sm:px-16 md:grid-cols-2">
           <div className="max-w-md space-y-4">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-              About <span className="text-orange-500">Barefox</span>
+              About <span className="text-orange-500">BareFox</span>
             </h2>
             <p className="text-black/70">
-              At ShiroeShop, we are passionate about bringing you high-quality
+              At BareFox, we are passionate about bringing you high-quality
               products at unbeatable prices. Our mission is to make shopping
               effortless, fun, and reliable.
             </p>

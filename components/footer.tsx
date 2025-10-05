@@ -73,7 +73,7 @@ export const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 py-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} ShiroeShop. This project is for
+        © {new Date().getFullYear()} Barefox. This project is for
         educational/demo purposes only. Not a real store.
       </div>
     </footer>
